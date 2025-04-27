@@ -1,0 +1,8 @@
+file(GLOB_RECURSE SOURCES "./*.c" "./*.cpp" "./images/*.c" "./fonts/*.c")
+
+idf_component_register(SRCS
+                        ${SOURCES}
+                       INCLUDE_DIRS
+                       "."
+                       PRIV_REQUIRES utils nvs_flash lvgl eez-framework air config_page button_control
+                       )
