@@ -7,10 +7,12 @@
 #include "esp_log.h"
 #include "utils.h"
 #include "esp_system.h"
+#include "idle_manager.h"
 
 #define TAG "ACTIONS"
 
-static void load_configs();
+static void sync_configs_to_btns();
+static void initialization();
 
 extern "C" void action_scr_screen_to_main(lv_event_t *e) {
     lv_scr_load(objects.main);
@@ -32,93 +34,10 @@ extern "C" void action_scr_screen_to_config(lv_event_t *e) {
 }
 
 extern "C" void action_main_screen_loaded_cb(lv_event_t *e) {
-    // 初始化这些固定结构
-    if (lamp_btns.empty()) {
-        lamp_btns.push_back(objects.lamp1);
-        lamp_btns.push_back(objects.lamp2);
-        lamp_btns.push_back(objects.lamp3);
-        lamp_btns.push_back(objects.lamp4);
-        lamp_btns.push_back(objects.lamp5);
-        lamp_btns.push_back(objects.lamp6);
-        lamp_btns.push_back(objects.lamp7);
-        lamp_btns.push_back(objects.lamp8);
-        lamp_btns.push_back(objects.lamp9);
-        lamp_btns.push_back(objects.lamp10);
-        lamp_btns.push_back(objects.lamp11);
-        lamp_btns.push_back(objects.lamp12);
-    }
-
-    if (curtain_btns.empty()) {
-        curtain_btns.push_back(objects.curtain1);
-        curtain_btns.push_back(objects.curtain2);
-        curtain_btns.push_back(objects.curtain3);
-        curtain_btns.push_back(objects.curtain4);
-        curtain_btns.push_back(objects.curtain5);
-        curtain_btns.push_back(objects.curtain6);
-    }
-
-    if (mode_btns.empty()) {
-        mode_btns.push_back(objects.mode1);
-        mode_btns.push_back(objects.mode2);
-        mode_btns.push_back(objects.mode3);
-        mode_btns.push_back(objects.mode4);
-        mode_btns.push_back(objects.mode5);
-        mode_btns.push_back(objects.mode6);
-    }
-
-    // 只会生效一次
-    load_configs();
-    
-    // 把配置页的obj的名字与id都存这里来
-    for (int i = 0; i < MAX_LAMP_COUNT; i++) {
-        if (i < lamp_objs.size()) {
-            ObjConfigInfo info = get_obj_config_info(lamp_objs[i]);
-            
-            lv_obj_t *label = lv_obj_get_child(lamp_btns[i], 0);
-            lv_label_set_text(label, info.name);
-            
-            lv_update_data<ObjConfigInfo>(lamp_btns[i], info);
-            printf("已记录lamp %s %d %d\n", info.name, info.panel_id, info.button_id);
-
-            lv_obj_clear_flag(lamp_btns[i], LV_OBJ_FLAG_HIDDEN);
-        } else {
-            lv_obj_add_flag(lamp_btns[i], LV_OBJ_FLAG_HIDDEN);
-        }
-    }
-
-    for (int i = 0; i < MAX_CURTAIN_COUNT; i++) {
-        if (i < curtain_objs.size()) {
-            ObjConfigInfo info = get_obj_config_info(curtain_objs[i]);
-            
-            lv_obj_t *label = lv_obj_get_child(curtain_btns[i], 0);
-            lv_label_set_text(label, info.name);
-            
-            lv_update_data<ObjConfigInfo>(curtain_btns[i], info);
-            printf("已记录curtain %s %d %d\n", info.name, info.panel_id, info.button_id);
-
-            lv_obj_clear_flag(curtain_btns[i], LV_OBJ_FLAG_HIDDEN);
-        } else {
-            lv_obj_add_flag(curtain_btns[i], LV_OBJ_FLAG_HIDDEN);
-        }
-    }
-
-    for (int i = 0; i < MAX_MODE_COUNT; i++) {
-        if (i < mode_objs.size()) {
-            ObjConfigInfo info = get_obj_config_info(mode_objs[i]);
-
-            lv_obj_t *label = lv_obj_get_child(mode_btns[i], 0);
-            lv_label_set_text(label, info.name);
-            
-            lv_update_data<ObjConfigInfo>(mode_btns[i], info);
-            printf("已记录mode %s %d %d\n", info.name, info.panel_id, info.button_id);
-
-            lv_obj_clear_flag(mode_btns[i], LV_OBJ_FLAG_HIDDEN);
-        } else {
-            lv_obj_add_flag(mode_btns[i], LV_OBJ_FLAG_HIDDEN);
-        }
-    }
+    initialization();
 }
 
+// 储存配置到nvs, 并应用
 extern "C" void action_store_configs(lv_event_t *e) {
     std::vector<DeviceConfigPacked> all_devices;
 
@@ -170,6 +89,8 @@ extern "C" void action_store_configs(lv_event_t *e) {
     }
     nvs_commit(handle);
     nvs_close(handle);
+
+    sync_configs_to_btns();
 }
 
 extern "C" void action_clean_all_configs(lv_event_t *e) {
@@ -201,9 +122,6 @@ extern "C" void action_clean_all_configs(lv_event_t *e) {
 }
 
 static void load_configs() {
-    static bool initialized = false;
-    if (initialized) return;
-
     nvs_handle_t handle;
     esp_err_t err = nvs_open("configs", NVS_READWRITE, &handle);
     if (err != ESP_OK) {
@@ -247,7 +165,6 @@ static void load_configs() {
                         break;
                 }
             }
-            initialized = true;
         } else {
             ESP_LOGE(TAG, "读取 device_cfg 失败: %s", esp_err_to_name(err));
         }
@@ -256,7 +173,104 @@ static void load_configs() {
     }
 
     nvs_close(handle);
+}
 
+// 同步配置页的所有配置到实际按钮上
+static void sync_configs_to_btns() {
+    for (int i = 0; i < MAX_LAMP_COUNT; i++) {
+        if (i < lamp_objs.size()) {
+            ObjConfigInfo info = get_obj_config_info(lamp_objs[i]);
+            
+            lv_obj_t *label = lv_obj_get_child(lamp_btns[i], 0);
+            lv_label_set_text(label, info.name);
+            
+            lv_update_data<ObjConfigInfo>(lamp_btns[i], info);
+            printf("已记录lamp %s %d %d\n", info.name, info.panel_id, info.button_id);
+
+            lv_obj_clear_flag(lamp_btns[i], LV_OBJ_FLAG_HIDDEN);
+        } else {
+            lv_obj_add_flag(lamp_btns[i], LV_OBJ_FLAG_HIDDEN);
+        }
+    }
+
+    for (int i = 0; i < MAX_CURTAIN_COUNT; i++) {
+        if (i < curtain_objs.size()) {
+            ObjConfigInfo info = get_obj_config_info(curtain_objs[i]);
+            
+            lv_obj_t *label = lv_obj_get_child(curtain_btns[i], 0);
+            lv_label_set_text(label, info.name);
+            
+            lv_update_data<ObjConfigInfo>(curtain_btns[i], info);
+            printf("已记录curtain %s %d %d\n", info.name, info.panel_id, info.button_id);
+
+            lv_obj_clear_flag(curtain_btns[i], LV_OBJ_FLAG_HIDDEN);
+        } else {
+            lv_obj_add_flag(curtain_btns[i], LV_OBJ_FLAG_HIDDEN);
+        }
+    }
+
+    for (int i = 0; i < MAX_MODE_COUNT; i++) {
+        if (i < mode_objs.size()) {
+            ObjConfigInfo info = get_obj_config_info(mode_objs[i]);
+
+            lv_obj_t *label = lv_obj_get_child(mode_btns[i], 0);
+            lv_label_set_text(label, info.name);
+            
+            lv_update_data<ObjConfigInfo>(mode_btns[i], info);
+            printf("已记录mode %s %d %d\n", info.name, info.panel_id, info.button_id);
+
+            lv_obj_clear_flag(mode_btns[i], LV_OBJ_FLAG_HIDDEN);
+        } else {
+            lv_obj_add_flag(mode_btns[i], LV_OBJ_FLAG_HIDDEN);
+        }
+    }
+}
+
+// 在UI启动完毕后唯一的初始化
+static void initialization() {
+    static bool initialized = false;
+    if (initialized) return;
+
+    // 初始化这些固定结构
+    if (lamp_btns.empty()) {
+        lamp_btns.push_back(objects.lamp1);
+        lamp_btns.push_back(objects.lamp2);
+        lamp_btns.push_back(objects.lamp3);
+        lamp_btns.push_back(objects.lamp4);
+        lamp_btns.push_back(objects.lamp5);
+        lamp_btns.push_back(objects.lamp6);
+        lamp_btns.push_back(objects.lamp7);
+        lamp_btns.push_back(objects.lamp8);
+        lamp_btns.push_back(objects.lamp9);
+        lamp_btns.push_back(objects.lamp10);
+        lamp_btns.push_back(objects.lamp11);
+        lamp_btns.push_back(objects.lamp12);
+    }
+
+    if (curtain_btns.empty()) {
+        curtain_btns.push_back(objects.curtain1);
+        curtain_btns.push_back(objects.curtain2);
+        curtain_btns.push_back(objects.curtain3);
+        curtain_btns.push_back(objects.curtain4);
+        curtain_btns.push_back(objects.curtain5);
+        curtain_btns.push_back(objects.curtain6);
+    }
+
+    if (mode_btns.empty()) {
+        mode_btns.push_back(objects.mode1);
+        mode_btns.push_back(objects.mode2);
+        mode_btns.push_back(objects.mode3);
+        mode_btns.push_back(objects.mode4);
+        mode_btns.push_back(objects.mode5);
+        mode_btns.push_back(objects.mode6);
+    }
+    lv_label_set_text(objects.version, VOLUNTUS_VERSION);
+    load_configs();             // 加载nvs配置
+    sync_configs_to_btns();     // 应用配置
+    init_idle_monitor(10000); // 启动待机定时器
+
+    ESP_LOGI(TAG, "UI之后的初始化完成");
+    initialized = true;
 }
 
 extern "C" void action_restart(lv_event_t *e) {
@@ -264,4 +278,16 @@ extern "C" void action_restart(lv_event_t *e) {
     restart_trigger.trigger([]() {
         esp_restart();
     });
+}
+
+extern "C" void action_close_voice_response_popup(lv_event_t *e) {
+    lv_obj_add_flag(objects.voice_response_popup, LV_OBJ_FLAG_HIDDEN);
+}
+
+// 点击暗屏遮罩层, 取消熄屏
+extern "C" void action_click_wakeup(lv_event_t *e) {
+    lv_obj_add_flag(objects.idle_overlay, LV_OBJ_FLAG_HIDDEN);
+    // del_fadeout_timer();
+
+    // turn_on_backlight();
 }

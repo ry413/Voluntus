@@ -1,5 +1,10 @@
 #pragma once
 #include <functional>
+#include <stdint.h>
+#include "lvgl.h"
+#include "driver/ledc.h"
+
+#define VOLUNTUS_VERSION "1.1.0-Initiatio"
 
 enum class DeviceType : uint8_t {
     Lamp = 0,
@@ -50,7 +55,7 @@ void lv_set_data(lv_obj_t *obj, const T &data) {
     lv_obj_set_user_data(obj, static_cast<void *>(ptr));
 }
 
-// 获取 user_data（返回指针，注意判空）
+// 获取 user_data
 template <typename T>
 T *lv_get_data(lv_obj_t *obj) {
     return static_cast<T *>(lv_obj_get_user_data(obj));
@@ -76,4 +81,16 @@ bool lv_update_data(lv_obj_t *obj, const T &new_data) {
         lv_set_data<T>(obj, new_data);
         return false;
     }
+}
+
+void inline turn_off_backlight() {
+    printf("关闭背光\n");
+    ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 0);
+    ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0);
+}
+
+void inline turn_on_backlight() {
+    printf("打开背光\n");
+    ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, 255);
+    ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0);
 }

@@ -7,6 +7,7 @@
 #include "rs485.h"
 #include "air.h"
 #include "wifi.h"
+#include "idle_manager.h"
 
 #define TAG "main.cpp"
 
@@ -14,9 +15,9 @@ extern "C" void lvgl_task(void *pvParameter);
 
 static void monitor_task(void *pvParameter) {
 	while(1) {
-        printf("INTERNAL: %d, DMA: %d\n",
+        printf("free INTERNAL: %d, DMA: %d\n",
                 heap_caps_get_free_size(MALLOC_CAP_INTERNAL), heap_caps_get_free_size(MALLOC_CAP_DMA));
-		vTaskDelay(5000 / portTICK_PERIOD_MS);
+		vTaskDelay(60000 / portTICK_PERIOD_MS);
 	}
 }
 
@@ -35,7 +36,7 @@ extern "C" void app_main(void) {
     ESP_LOGI(TAG, "NVS 初始化成功");
 
     xTaskCreatePinnedToCore(lvgl_task, "lvgl_task", 4096 * 2, nullptr, 10, nullptr, 1);
-    // xTaskCreate(monitor_task, "monitor_task", 3072, nullptr, 1, nullptr);
+    xTaskCreate(monitor_task, "monitor_task", 3072, nullptr, 1, nullptr);
     rs485_init();
     init_air_commit_timer();    // 空调防抖定时器
 

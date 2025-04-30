@@ -12,6 +12,7 @@
 #include "driver/i2c.h"
 
 #include "ui.h"
+#include "idle_manager.h"
 
 #define TAG "XZBGS3_GUI"
 
@@ -72,13 +73,22 @@ static void example_lvgl_touch_cb(lv_indev_drv_t * drv, lv_indev_data_t * data)
     /* Get coordinates */
     bool touchpad_pressed = esp_lcd_touch_get_coordinates(drv->user_data, touchpad_x, touchpad_y, NULL, &touchpad_cnt, 1);
 
+    // 防止按住屏幕时不停重置定时器
+    static bool is_touching = false;
+
     if (touchpad_pressed && touchpad_cnt > 0) {
         data->point.x = touchpad_x[0];
         data->point.y = touchpad_y[0];
         data->state = LV_INDEV_STATE_PR;
         // ESP_LOGI(TAG, "X=%u Y=%u", data->point.x, data->point.y);
+
+        if (!is_touching) {
+            reset_idle_monitor();
+            is_touching = true;
+        }
     } else {
         data->state = LV_INDEV_STATE_REL;
+        is_touching = false;
     }
 }
 

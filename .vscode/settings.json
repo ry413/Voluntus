@@ -98,6 +98,9 @@
     "optional": "cpp",
     "ranges": "cpp",
     "span": "cpp",
-    "valarray": "cpp"
+    "valarray": "cpp",
+    "i2c.h": "c",
+    "idle_manager.h": "c",
+    "actions.h": "c"
   }
 }

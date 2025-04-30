@@ -65,6 +65,8 @@ typedef struct _objects_t {
     lv_obj_t *obj4;
     lv_obj_t *obj5;
     lv_obj_t *obj6;
+    lv_obj_t *idle_overlay;
+    lv_obj_t *voice_response_popup;
     lv_obj_t *config_air_btn;
     lv_obj_t *config_lamp_btn;
     lv_obj_t *config_curtain_btn;
@@ -112,15 +114,17 @@ typedef struct _objects_t {
     lv_obj_t *room_temp;
     lv_obj_t *now_time;
     lv_obj_t *obj20;
+    lv_obj_t *obj21;
+    lv_obj_t *voice_response_label;
     lv_obj_t *obj_container;
     lv_obj_t *page_air;
-    lv_obj_t *obj21;
+    lv_obj_t *obj22;
     lv_obj_t *air_id;
     lv_obj_t *config_table_header;
-    lv_obj_t *obj22;
     lv_obj_t *obj23;
-    lv_obj_t *config_table_footer;
     lv_obj_t *obj24;
+    lv_obj_t *config_table_footer;
+    lv_obj_t *version;
     lv_obj_t *obj25;
     lv_obj_t *obj26;
 } objects_t;
@@ -157,6 +161,9 @@ void tick_user_widget_curtain_name_selector(void *flowState, int startWidgetInde
 
 void create_user_widget_mode_name_selector(lv_obj_t *parent_obj, void *flowState, int startWidgetIndex);
 void tick_user_widget_mode_name_selector(void *flowState, int startWidgetIndex);
+
+void create_user_widget_voice_response_popup(lv_obj_t *parent_obj, void *flowState, int startWidgetIndex);
+void tick_user_widget_voice_response_popup(void *flowState, int startWidgetIndex);
 
 void tick_screen_by_id(enum ScreensEnum screenId);
 void tick_screen(int screen_index);

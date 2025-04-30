@@ -4,5 +4,6 @@ idf_component_register(SRCS
                         ${SOURCES}
                        INCLUDE_DIRS
                        "."
-                       PRIV_REQUIRES utils nvs_flash lvgl eez-framework air config_page button_control
+                       REQUIRES lvgl
+                       PRIV_REQUIRES idle_manager utils nvs_flash eez-framework air config_page button_control
                        )

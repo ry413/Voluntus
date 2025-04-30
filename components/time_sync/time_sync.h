@@ -33,7 +33,10 @@ public:
         if (tm_info) {
             static char buf[6];
             snprintf(buf, sizeof(buf), "%02d:%02d", tm_info->tm_hour, tm_info->tm_min);
-            lv_label_set_text(self->target_label, buf);
+            lv_async_call([](void *param) {
+                auto *self = static_cast<ClockManager *>(param);
+                lv_label_set_text(self->target_label, buf);
+            }, self);
         }
     }
 

@@ -15,6 +15,9 @@
 #include "ui.h"
 #include "screens.h"
 #include "time_sync.h"
+#include "idle_manager.h"
+#include <unordered_map>
+#include "actions.h"
 
 static const char *TAG = "RS485";
 
@@ -24,6 +27,139 @@ static void handle_rs485_data(uint8_t* data, int length);
 
 TimerHandle_t heartbeat_timeout_timer = nullptr;
 void heartbeat_timeout_cb(TimerHandle_t xTimer);
+
+// 离线语音相关
+static const std::unordered_map<uint32_t, std::string> voice_response = {
+    {0x100D0064, "好的, 打开卫浴灯"},
+    {0x100D0000, "好的, 关闭卫浴灯"},
+
+    {0x100E0064, "好的, 打开排风扇"},
+    {0X100E0000, "好的, 关闭排风扇"},
+
+    {0X100F0064, "好的, 打开镜前灯"},
+    {0X100F0000, "好的, 关闭镜前灯"},
+
+    {0X10060064, "好的, 打开灯带"},
+    {0X10060000, "好的, 关闭灯带"},
+    
+    {0X10070064, "好的, 打开廊灯"},
+    {0X10070000, "好的, 关闭廊灯"},
+    
+    {0X10080064, "好的, 打开房灯"},
+    {0X10080000, "好的, 关闭房灯"},
+
+    {0X10090064, "好的, 打开壁灯"},
+    {0X10090000, "好的, 关闭壁灯"},
+
+    {0X100A0064, "好的, 打开筒灯"},
+    {0X100A0000, "好的, 关闭筒灯"},
+
+    {0X100B0064, "好的, 打开射灯"},
+    {0X100B0000, "好的, 关闭射灯"},
+
+    {0X100C0064, "好的, 打开床头灯"},
+    {0X100C0000, "好的, 关闭床头灯"},
+
+    {0X10120064, "好的, 打开阳台灯"},
+    {0X10120000, "好的, 关闭阳台灯"},
+
+    {0X10190064, "好的, 打开阅读灯"},
+    {0X10190000, "好的, 关闭阅读灯"},
+
+    {0X10FF0231, "好的, 灯光调暗"},
+    {0X10FF0206, "好的, 调到最暗"},
+    {0X10FF0207, "好的, 亮度二十"},
+    {0X10FF0208, "好的, 亮度三十"},
+    {0X10FF0209, "好的, 亮度四十"},
+    {0X10FF020A, "好的, 亮度五十"},
+    {0X10FF020B, "好的, 亮度六十"},
+    {0X10FF020C, "好的, 亮度七十"},
+    {0X10FF020D, "好的, 亮度八十"},
+    {0X10FF020E, "好的, 亮度九十"},
+    {0X10FF020F, "好的, 调到最亮"},
+    {0X10FF0301, "好的, 打开调色"},
+    {0X10FF0300, "好的, 关闭调色"},
+    {0X10FF0302, "好的, 调成红色"},
+    {0X10FF0303, "好的, 调成橙色"},
+    {0X10FF0304, "好的, 调成黄色"},
+    {0X10FF0305, "好的, 调成绿色"},
+    {0X10FF0306, "好的, 调成蓝色"}, // ?
+    {0X10FF0307, "好的, 调成粉色"},
+    {0X10FF0308, "好的, 调成紫色"},
+
+    {0X1E000100, "好的, 打开灯光"},
+    {0x1E010100, "好的, 明亮模式"},
+    {0x1E010200, "好的, 柔和模式"},
+    {0x1E010300, "好的, 会客模式"},
+    {0x1E010400, "好的, 阅读模式"},
+    {0x1E010500, "好的, 休闲模式"},
+    // {0x1E010600} // ?
+    {0x1E010700, "好的, 影音模式"},
+    {0x1E010800, "好的, 浪漫模式"},
+    {0x1E010900, "好的, 温馨模式"},
+    {0x1E010A00, "好的, 睡眠模式"},
+    {0x1E010B00, "好的, 总关模式"},
+    {0x1E010C00, "好的, 总控模式"},
+    
+    {0x16000100, "好的, 打开空调"},
+    {0x16000000, "好的, 关闭空调"},
+    {0x16000200, "好的, 制冷模式"},
+    {0x16000300, "好的, 制热模式"},
+    {0x16000400, "好的, 调到高风"},
+    {0x16000500, "好的, 调到中风"},
+    {0x16000600, "好的, 调到低风"},
+    {0x16000700, "好的, 风速调高"},
+    {0x16000800, "好的, 风速调低"},
+    {0x16000900, "好的, 温度加"},
+    {0x16000A00, "好的, 温度减"},
+    
+    {0x16010100, "好的, 二十一度"},
+    {0x16010200, "好的, 二十二度"},
+    {0x16010300, "好的, 二十三度"},
+    {0x16010400, "好的, 二三四度"},
+    {0x16010500, "好的, 二十五度"},
+    {0x16010600, "好的, 二十六度"},
+    {0x16010700, "好的, 二十七度"},
+    {0x16010800, "好的, 二十八度"},
+    {0x16010B00, "好的, 调到最低十八度"},   // ?
+    {0x16010C00, "好的, 十九度"},
+    {0x16010D00, "好的, 二十度"},
+    
+    {0x14000200, "好的, 打开窗帘"},
+    {0x14000000, "好的, 关闭窗帘"},
+    {0x14000100, "好的, 窗帘停止"},
+    {0x14010200, "好的, 打开窗纱"},
+    {0x14010000, "好的, 关闭窗纱"},
+    {0x14010100, "好的, 窗纱停止"},
+
+    {0x14030200, "好的, 已打开"},
+    {0x14030000, "好的, 已关闭"},
+
+    {0x1C000100, "好的, 打开门锁"},
+
+    {0x18000100, "好的, 打开电视"},
+    {0x18000000, "好的, 关闭电视"},
+    {0x18000200, "好的, 音量加大"},
+    {0x18000300, "好的, 音量减小"},
+    {0x18000400, "好的, 电视静音"},
+    {0x18000500, "好的, 频道加"},
+    {0x18000600, "好的, 频道减"},
+
+    {0x1A240100, "好的, 打开勿扰"},
+    {0x1A240000, "好的, 关闭勿扰"},
+    {0x1A200100, "好的, 打开清理"},
+    {0x1A200000, "好的, 关闭清理"},
+};
+struct TypingEffectContext {
+    std::string full_text;
+    size_t current_index = 0;
+    lv_timer_t* typing_timer = nullptr;
+    lv_timer_t* hide_timer = nullptr;
+    int popup_alive_time = 3000;    // 弹窗自然存活时间
+};
+static TypingEffectContext typing_ctx;
+void show_voice_popup(const std::string& text, int popup_alive_time = 3000);
+static const uint8_t VOICE_WAKEUP[] = {0x88, 0x88, 0x88, 0x88, 0x88};
 
 // 状态机的状态
 typedef enum {
@@ -144,7 +280,7 @@ static void handle_rs485_data(uint8_t* data, int length) {
         return;
     }
     static const uint8_t CMD_HEARTBEAT[] = {0xC0, 0xFF, 0xFF, 0x00};
-    if (memcmp(&data[1], CMD_HEARTBEAT, sizeof(CMD_HEARTBEAT)) != 0) {
+    if (memcmp(&data[1], CMD_HEARTBEAT, 4) != 0) {
         printf("485收到: ");
         for (size_t i = 0; i < 8; ++i) {
             printf("%02X ", data[i]);
@@ -154,7 +290,7 @@ static void handle_rs485_data(uint8_t* data, int length) {
         
 
     // 查询指令(心跳包)
-    if (memcmp(&data[1], CMD_HEARTBEAT, sizeof(CMD_HEARTBEAT)) == 0) {
+    if (memcmp(&data[1], CMD_HEARTBEAT, 4) == 0) {
         xTimerReset(heartbeat_timeout_timer, 0);
 
         PanelManager::getInstance().report_all_state();
@@ -196,6 +332,35 @@ static void handle_rs485_data(uint8_t* data, int length) {
         ClockManager::getInstance().init(timestamp);
         ClockManager::getInstance().attach_label(objects.now_time);
     }
+    // 离线语音的唤醒
+    else if (memcmp(&data[1], VOICE_WAKEUP, 5) == 0) {
+        // 收到离线语音当然要点亮屏幕
+        // action_click_wakeup(nullptr);
+        reset_idle_monitor();
+
+        lv_async_call([](void *param) {
+            show_voice_popup("有什么可以帮助您?", 10000);
+        }, nullptr);
+    }
+    // 离线语音
+    else if (data[1] == OFFICE_VOICE) {
+        // action_click_wakeup(nullptr);
+        reset_idle_monitor();
+
+        uint32_t opcode = (data[2] << 24) | (data[3] << 16) | (data[4] << 8) | data[5];
+        auto it = voice_response.find(opcode);
+        if (it != voice_response.end()) {
+            std::string message = it->second;
+            lv_async_call([](void *param) {
+                std::string *msg = static_cast<std::string*>(param);
+                show_voice_popup(*msg);
+                delete msg;
+            }, new std::string(message));
+        } else {
+            ESP_LOGW(TAG, "未知语音码: 0x%08lX", opcode);
+        }
+    }
+
 }
 
 void sendRS485CMD(uint8_t param1, uint8_t param2, uint8_t param3, uint8_t param4, uint8_t param5) {
@@ -238,4 +403,50 @@ void sendRS485CMD(const std::vector<uint8_t>& data) {
 void heartbeat_timeout_cb(TimerHandle_t xTimer) {
     // 丢弃所有panel的dirty标记
     PanelManager::getInstance().discard_all_state();
+}
+
+
+void show_voice_popup(const std::string& text, int popup_alive_time) {
+    if (lv_obj_get_parent(objects.voice_response_popup) != lv_scr_act()) {
+        lv_obj_set_parent(objects.voice_response_popup, lv_scr_act());
+    }
+
+    // 如果上一次打字还没打完，先清掉旧timer
+    if (typing_ctx.typing_timer) {
+        lv_timer_del(typing_ctx.typing_timer);
+        typing_ctx.typing_timer = nullptr;
+    }
+    if (typing_ctx.hide_timer) {
+        lv_timer_del(typing_ctx.hide_timer);
+        typing_ctx.hide_timer = nullptr;
+    }
+
+    // 准备新的内容
+    typing_ctx.full_text = text;
+    typing_ctx.current_index = 0;
+    typing_ctx.popup_alive_time = popup_alive_time;
+
+    lv_label_set_text(objects.voice_response_label, ""); // 清空label
+    lv_obj_clear_flag(objects.voice_response_popup, LV_OBJ_FLAG_HIDDEN);
+
+    // 开始打字机效果
+    typing_ctx.typing_timer = lv_timer_create([](lv_timer_t* t) {
+        // 每次进来打一字
+        if (typing_ctx.current_index < typing_ctx.full_text.size()) {
+            std::string partial = typing_ctx.full_text.substr(0, typing_ctx.current_index + 1);
+            lv_label_set_text(objects.voice_response_label, partial.c_str());
+            typing_ctx.current_index++;
+        } else {
+            // 打完了
+            lv_timer_del(typing_ctx.typing_timer);
+            typing_ctx.typing_timer = nullptr;
+
+            // 生存时间过后隐藏popup
+            typing_ctx.hide_timer = lv_timer_create([](lv_timer_t* t_hide) {
+                lv_obj_add_flag(objects.voice_response_popup, LV_OBJ_FLAG_HIDDEN);
+                lv_timer_del(typing_ctx.hide_timer);
+                typing_ctx.hide_timer = nullptr;
+            }, typing_ctx.popup_alive_time, nullptr);
+        }
+    }, 40, nullptr);
 }

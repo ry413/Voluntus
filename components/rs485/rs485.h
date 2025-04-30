@@ -22,6 +22,7 @@
 #define SWITCH_REPORT           0x00    // 本面板上报状态给RCU
 #define SWITCH_CONTROL          0x01    // RCU操作本面板
 #define TIME_SYNC               0x78    // RCU广播出来的时间
+#define OFFICE_VOICE            0x80    // 离线语音
 // 发送队列
 #define RS485_CMD_MAX_LEN       8
 #define RS485_QUEUE_LEN         10

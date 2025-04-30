@@ -202,6 +202,28 @@ static void event_handler_cb_main_obj6(lv_event_t *e) {
     }
 }
 
+static void event_handler_cb_main_idle_overlay(lv_event_t *e) {
+    lv_event_code_t event = lv_event_get_code(e);
+    void *flowState = lv_event_get_user_data(e);
+    (void)flowState;
+    
+    if (event == LV_EVENT_PRESSED) {
+        e->user_data = (void *)0;
+        action_click_wakeup(e);
+    }
+}
+
+static void event_handler_cb_main_voice_response_popup(lv_event_t *e) {
+    lv_event_code_t event = lv_event_get_code(e);
+    void *flowState = lv_event_get_user_data(e);
+    (void)flowState;
+    
+    if (event == LV_EVENT_PRESSED) {
+        e->user_data = (void *)0;
+        action_close_voice_response_popup(e);
+    }
+}
+
 static void event_handler_cb_config_config(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     void *flowState = lv_event_get_user_data(e);
@@ -1473,6 +1495,55 @@ void create_screen_main() {
             lv_obj_set_style_text_font(obj, &ui_font_ping_fang22, LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_label_set_text(obj, "室温:    °C");
         }
+        {
+            // idle_overlay
+            lv_obj_t *obj = lv_obj_create(parent_obj);
+            objects.idle_overlay = obj;
+            lv_obj_set_pos(obj, 0, 0);
+            lv_obj_set_size(obj, 480, 480);
+            lv_obj_add_event_cb(obj, event_handler_cb_main_idle_overlay, LV_EVENT_ALL, flowState);
+            lv_obj_add_flag(obj, LV_OBJ_FLAG_HIDDEN);
+            add_style_popup_window_background(obj);
+        }
+        {
+            // voice_response_popup
+            lv_obj_t *obj = lv_obj_create(parent_obj);
+            objects.voice_response_popup = obj;
+            lv_obj_set_pos(obj, 0, 0);
+            lv_obj_set_size(obj, 480, 480);
+            lv_obj_add_event_cb(obj, event_handler_cb_main_voice_response_popup, LV_EVENT_ALL, flowState);
+            lv_obj_add_flag(obj, LV_OBJ_FLAG_HIDDEN);
+            add_style_popup_window_background(obj);
+            {
+                lv_obj_t *parent_obj = obj;
+                {
+                    lv_obj_t *obj = lv_obj_create(parent_obj);
+                    objects.obj21 = obj;
+                    lv_obj_set_pos(obj, 62, 131);
+                    lv_obj_set_size(obj, 324, 200);
+                    lv_obj_clear_flag(obj, LV_OBJ_FLAG_CLICKABLE|LV_OBJ_FLAG_SCROLLABLE);
+                    add_style_normal_panel(obj);
+                    lv_obj_set_style_border_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_border_side(obj, LV_BORDER_SIDE_NONE, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_outline_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+                    {
+                        lv_obj_t *parent_obj = obj;
+                        {
+                            // voice_response_label
+                            lv_obj_t *obj = lv_label_create(parent_obj);
+                            objects.voice_response_label = obj;
+                            lv_obj_set_pos(obj, -7, 70);
+                            lv_obj_set_size(obj, 307, LV_SIZE_CONTENT);
+                            lv_obj_set_style_text_font(obj, &ui_font_ping_fang32, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_label_set_text(obj, "Text");
+                        }
+                    }
+                }
+            }
+        }
     }
     
     tick_screen_main();
@@ -1610,7 +1681,7 @@ void create_screen_config() {
                 lv_obj_t *parent_obj = obj;
                 {
                     lv_obj_t *obj = lv_label_create(parent_obj);
-                    objects.obj21 = obj;
+                    objects.obj22 = obj;
                     lv_obj_set_pos(obj, 155, 28);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
                     lv_obj_set_style_text_font(obj, &ui_font_ping_fang22, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -1698,7 +1769,7 @@ void create_screen_config() {
                 lv_obj_t *parent_obj = obj;
                 {
                     lv_obj_t *obj = lv_label_create(parent_obj);
-                    objects.obj22 = obj;
+                    objects.obj23 = obj;
                     lv_obj_set_pos(obj, 27, 8);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
                     lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -1707,7 +1778,7 @@ void create_screen_config() {
                 }
                 {
                     lv_obj_t *obj = lv_label_create(parent_obj);
-                    objects.obj23 = obj;
+                    objects.obj24 = obj;
                     lv_obj_set_pos(obj, 164, 8);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
                     lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -1898,8 +1969,9 @@ void create_screen_config() {
             lv_obj_add_flag(obj, LV_OBJ_FLAG_HIDDEN);
         }
         {
+            // version
             lv_obj_t *obj = lv_label_create(parent_obj);
-            objects.obj24 = obj;
+            objects.version = obj;
             lv_obj_set_pos(obj, 5, 460);
             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
             lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -3204,12 +3276,49 @@ void tick_user_widget_mode_name_selector(void *flowState, int startWidgetIndex) 
     (void)startWidgetIndex;
 }
 
+void create_user_widget_voice_response_popup(lv_obj_t *parent_obj, void *flowState, int startWidgetIndex) {
+    (void)flowState;
+    (void)startWidgetIndex;
+    lv_obj_t *obj = parent_obj;
+    {
+        lv_obj_t *parent_obj = obj;
+        {
+            lv_obj_t *obj = lv_obj_create(parent_obj);
+            lv_obj_set_pos(obj, 0, 0);
+            lv_obj_set_size(obj, 480, 480);
+            add_style_popup_window_background(obj);
+        }
+        {
+            lv_obj_t *obj = lv_obj_create(parent_obj);
+            ((lv_obj_t **)&objects)[startWidgetIndex + 0] = obj;
+            lv_obj_set_pos(obj, 86, 113);
+            lv_obj_set_size(obj, 309, 224);
+            lv_obj_set_style_bg_color(obj, lv_color_hex(0xff4e4e4e), LV_PART_MAIN | LV_STATE_DEFAULT);
+        }
+        {
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            ((lv_obj_t **)&objects)[startWidgetIndex + 1] = obj;
+            lv_obj_set_pos(obj, 146, 212);
+            lv_obj_set_size(obj, 189, LV_SIZE_CONTENT);
+            lv_obj_set_style_text_font(obj, &ui_font_ping_fang22, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_text_align(obj, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_label_set_text(obj, "好的kkllkllkmkj");
+        }
+    }
+}
+
+void tick_user_widget_voice_response_popup(void *flowState, int startWidgetIndex) {
+    (void)flowState;
+    (void)startWidgetIndex;
+}
+
 
 extern void add_style(lv_obj_t *obj, int32_t styleIndex);
 extern void remove_style(lv_obj_t *obj, int32_t styleIndex);
 
 static const char *screen_names[] = { "Main", "config", "lamp_control", "curtain_control" };
-static const char *object_names[] = { "main", "config", "lamp_control", "curtain_control", "mode_name_selector", "mode_name_selector__obj27", "mode_name_selector__obj28", "mode_name_selector__obj29", "mode_name_selector__obj30", "mode_name_selector__obj31", "mode_name_selector__obj32", "mode_name_selector__obj33", "mode_name_selector__obj34", "mode_name_selector__obj35", "mode_name_selector__obj36", "mode_name_selector__obj37", "mode_name_selector__selector_2", "curtain_name_selector", "curtain_name_selector__obj17", "curtain_name_selector__obj18", "curtain_name_selector__obj19", "curtain_name_selector__obj20", "curtain_name_selector__obj21", "curtain_name_selector__obj22", "curtain_name_selector__obj23", "curtain_name_selector__obj24", "curtain_name_selector__obj25", "curtain_name_selector__obj26", "lamp_name_selector", "lamp_name_selector__obj3", "lamp_name_selector__obj4", "lamp_name_selector__obj5", "lamp_name_selector__obj6", "lamp_name_selector__obj7", "lamp_name_selector__obj8", "lamp_name_selector__obj9", "lamp_name_selector__obj10", "lamp_name_selector__obj11", "lamp_name_selector__obj12", "lamp_name_selector__obj13", "lamp_name_selector__obj14", "lamp_name_selector__obj15", "lamp_name_selector__obj16", "mode1", "mode2", "mode3", "mode4", "mode5", "mode6", "target_temp", "obj0", "obj1", "obj2", "obj3", "obj4", "obj5", "obj6", "config_air_btn", "config_lamp_btn", "config_curtain_btn", "config_mode_btn", "obj7", "obj8", "obj9", "page_number", "obj10", "obj11", "obj12", "obj13", "obj14", "lamp1", "lamp2", "lamp3", "lamp4", "lamp5", "lamp6", "lamp7", "lamp8", "lamp9", "lamp10", "lamp11", "lamp12", "obj15", "curtain1", "curtain2", "curtain3", "curtain4", "curtain5", "curtain6", "modes_container", "air_panel", "obj16", "air_mode", "air_fan_speed", "obj17", "air_off_overlay", "falt1", "flat2", "hell_2", "obj18", "obj19", "room_temp", "now_time", "obj20", "obj_container", "page_air", "obj21", "air_id", "config_table_header", "obj22", "obj23", "config_table_footer", "obj24", "obj25", "obj26" };
+static const char *object_names[] = { "main", "config", "lamp_control", "curtain_control", "mode_name_selector", "mode_name_selector__obj27", "mode_name_selector__obj28", "mode_name_selector__obj29", "mode_name_selector__obj30", "mode_name_selector__obj31", "mode_name_selector__obj32", "mode_name_selector__obj33", "mode_name_selector__obj34", "mode_name_selector__obj35", "mode_name_selector__obj36", "mode_name_selector__obj37", "mode_name_selector__selector_2", "curtain_name_selector", "curtain_name_selector__obj17", "curtain_name_selector__obj18", "curtain_name_selector__obj19", "curtain_name_selector__obj20", "curtain_name_selector__obj21", "curtain_name_selector__obj22", "curtain_name_selector__obj23", "curtain_name_selector__obj24", "curtain_name_selector__obj25", "curtain_name_selector__obj26", "lamp_name_selector", "lamp_name_selector__obj3", "lamp_name_selector__obj4", "lamp_name_selector__obj5", "lamp_name_selector__obj6", "lamp_name_selector__obj7", "lamp_name_selector__obj8", "lamp_name_selector__obj9", "lamp_name_selector__obj10", "lamp_name_selector__obj11", "lamp_name_selector__obj12", "lamp_name_selector__obj13", "lamp_name_selector__obj14", "lamp_name_selector__obj15", "lamp_name_selector__obj16", "mode1", "mode2", "mode3", "mode4", "mode5", "mode6", "target_temp", "obj0", "obj1", "obj2", "obj3", "obj4", "obj5", "obj6", "idle_overlay", "voice_response_popup", "config_air_btn", "config_lamp_btn", "config_curtain_btn", "config_mode_btn", "obj7", "obj8", "obj9", "page_number", "obj10", "obj11", "obj12", "obj13", "obj14", "lamp1", "lamp2", "lamp3", "lamp4", "lamp5", "lamp6", "lamp7", "lamp8", "lamp9", "lamp10", "lamp11", "lamp12", "obj15", "curtain1", "curtain2", "curtain3", "curtain4", "curtain5", "curtain6", "modes_container", "air_panel", "obj16", "air_mode", "air_fan_speed", "obj17", "air_off_overlay", "falt1", "flat2", "hell_2", "obj18", "obj19", "room_temp", "now_time", "obj20", "obj21", "voice_response_label", "obj_container", "page_air", "obj22", "air_id", "config_table_header", "obj23", "obj24", "config_table_footer", "version", "obj25", "obj26" };
 static const char *style_names[] = { "Center Icon", "Round Button", "Normal Button", "control_item_mode", "Normal Panel", "test", "config_tab", "lamp_name_item", "control_item_lamp", "control_btn", "delete_device", "popup window background" };
 
 
