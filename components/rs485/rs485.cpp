@@ -14,7 +14,7 @@
 #include <ctime>
 #include "ui.h"
 #include "screens.h"
-#include "time_sync.h"
+#include "clock_manager.h"
 #include "idle_manager.h"
 #include <unordered_map>
 #include "actions.h"
@@ -303,7 +303,13 @@ static void handle_rs485_data(uint8_t* data, int length) {
         PanelManager::getInstance().update_lights(panel_id, lights_byte);
     }
     // 收到某处发出的空调信息, RCU或者温控器
-    else if (data[1] == AIR_CON) {
+    else if (data[1] == AIR_CON && data[2] == 0xA1) {
+        // 唤醒屏幕
+        lv_async_call([](void *param) {
+            action_click_wakeup(nullptr);
+        }, nullptr);
+        reset_idle_monitor();   // 这种异步唤醒屏幕, 都应该跟着重置一下待机定时器
+        
         uint8_t state = data[4];
         // 无视不同id的信息
         if (get_var_air_id() != (state & 0x07)) return;
@@ -324,6 +330,11 @@ static void handle_rs485_data(uint8_t* data, int length) {
     }
     // RCU同步时间
     else if (data[1] == TIME_SYNC) {
+        lv_async_call([](void *param) {
+            action_click_wakeup(nullptr);
+        }, nullptr);
+        reset_idle_monitor();
+
         time_t timestamp = ((time_t)data[2] << 24) |
             ((time_t)data[3] << 16) |
             ((time_t)data[4] << 8)  |
@@ -331,11 +342,13 @@ static void handle_rs485_data(uint8_t* data, int length) {
 
         ClockManager::getInstance().init(timestamp);
         ClockManager::getInstance().attach_label(objects.now_time);
+        lv_async_call([](void *param) {
+            lv_obj_clear_flag(objects.main_screen_time_decora, LV_OBJ_FLAG_HIDDEN);
+        }, nullptr);
+        ClockManager::getInstance().attach_label(objects.idle_screen_time_label);
     }
     // 离线语音的唤醒
     else if (memcmp(&data[1], VOICE_WAKEUP, 5) == 0) {
-        // 收到离线语音当然要点亮屏幕
-        // action_click_wakeup(nullptr);
         reset_idle_monitor();
 
         lv_async_call([](void *param) {
@@ -344,7 +357,6 @@ static void handle_rs485_data(uint8_t* data, int length) {
     }
     // 离线语音
     else if (data[1] == OFFICE_VOICE) {
-        // action_click_wakeup(nullptr);
         reset_idle_monitor();
 
         uint32_t opcode = (data[2] << 24) | (data[3] << 16) | (data[4] << 8) | data[5];
@@ -353,7 +365,7 @@ static void handle_rs485_data(uint8_t* data, int length) {
             std::string message = it->second;
             lv_async_call([](void *param) {
                 std::string *msg = static_cast<std::string*>(param);
-                show_voice_popup(*msg);
+                show_voice_popup(*msg, 10000);
                 delete msg;
             }, new std::string(message));
         } else {
@@ -407,6 +419,8 @@ void heartbeat_timeout_cb(TimerHandle_t xTimer) {
 
 
 void show_voice_popup(const std::string& text, int popup_alive_time) {
+    action_click_wakeup(nullptr);
+
     if (lv_obj_get_parent(objects.voice_response_popup) != lv_scr_act()) {
         lv_obj_set_parent(objects.voice_response_popup, lv_scr_act());
     }

@@ -202,6 +202,17 @@ static void event_handler_cb_main_obj6(lv_event_t *e) {
     }
 }
 
+static void event_handler_cb_main_voice_response_popup(lv_event_t *e) {
+    lv_event_code_t event = lv_event_get_code(e);
+    void *flowState = lv_event_get_user_data(e);
+    (void)flowState;
+    
+    if (event == LV_EVENT_PRESSED) {
+        e->user_data = (void *)0;
+        action_close_voice_response_popup(e);
+    }
+}
+
 static void event_handler_cb_main_idle_overlay(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     void *flowState = lv_event_get_user_data(e);
@@ -213,14 +224,14 @@ static void event_handler_cb_main_idle_overlay(lv_event_t *e) {
     }
 }
 
-static void event_handler_cb_main_voice_response_popup(lv_event_t *e) {
+static void event_handler_cb_main_obj7(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     void *flowState = lv_event_get_user_data(e);
     (void)flowState;
     
     if (event == LV_EVENT_PRESSED) {
         e->user_data = (void *)0;
-        action_close_voice_response_popup(e);
+        action_turn_off_backlight(e);
     }
 }
 
@@ -279,7 +290,7 @@ static void event_handler_cb_config_config_mode_btn(lv_event_t *e) {
     }
 }
 
-static void event_handler_cb_config_obj7(lv_event_t *e) {
+static void event_handler_cb_config_obj8(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     void *flowState = lv_event_get_user_data(e);
     (void)flowState;
@@ -290,7 +301,7 @@ static void event_handler_cb_config_obj7(lv_event_t *e) {
     }
 }
 
-static void event_handler_cb_config_obj8(lv_event_t *e) {
+static void event_handler_cb_config_obj9(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     void *flowState = lv_event_get_user_data(e);
     (void)flowState;
@@ -305,7 +316,7 @@ static void event_handler_cb_config_obj8(lv_event_t *e) {
     }
 }
 
-static void event_handler_cb_config_obj9(lv_event_t *e) {
+static void event_handler_cb_config_obj10(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     void *flowState = lv_event_get_user_data(e);
     (void)flowState;
@@ -327,7 +338,7 @@ static void event_handler_cb_config_page_number(lv_event_t *e) {
     }
 }
 
-static void event_handler_cb_config_obj10(lv_event_t *e) {
+static void event_handler_cb_config_obj11(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     void *flowState = lv_event_get_user_data(e);
     (void)flowState;
@@ -338,7 +349,7 @@ static void event_handler_cb_config_obj10(lv_event_t *e) {
     }
 }
 
-static void event_handler_cb_config_obj11(lv_event_t *e) {
+static void event_handler_cb_config_obj12(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     void *flowState = lv_event_get_user_data(e);
     (void)flowState;
@@ -349,7 +360,7 @@ static void event_handler_cb_config_obj11(lv_event_t *e) {
     }
 }
 
-static void event_handler_cb_config_obj12(lv_event_t *e) {
+static void event_handler_cb_config_obj13(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     void *flowState = lv_event_get_user_data(e);
     (void)flowState;
@@ -360,7 +371,7 @@ static void event_handler_cb_config_obj12(lv_event_t *e) {
     }
 }
 
-static void event_handler_cb_config_obj13(lv_event_t *e) {
+static void event_handler_cb_config_obj14(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     void *flowState = lv_event_get_user_data(e);
     (void)flowState;
@@ -371,7 +382,7 @@ static void event_handler_cb_config_obj13(lv_event_t *e) {
     }
 }
 
-static void event_handler_cb_lamp_control_obj14(lv_event_t *e) {
+static void event_handler_cb_lamp_control_obj15(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     void *flowState = lv_event_get_user_data(e);
     (void)flowState;
@@ -562,7 +573,7 @@ static void event_handler_cb_lamp_control_lamp12(lv_event_t *e) {
     }
 }
 
-static void event_handler_cb_curtain_control_obj15(lv_event_t *e) {
+static void event_handler_cb_curtain_control_obj16(lv_event_t *e) {
     lv_event_code_t event = lv_event_get_code(e);
     void *flowState = lv_event_get_user_data(e);
     (void)flowState;
@@ -1224,7 +1235,7 @@ void create_screen_main() {
                 lv_obj_t *parent_obj = obj;
                 {
                     lv_obj_t *obj = lv_obj_create(parent_obj);
-                    objects.obj16 = obj;
+                    objects.obj17 = obj;
                     lv_obj_set_pos(obj, -6, -5);
                     lv_obj_set_size(obj, 213, 125);
                     lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
@@ -1263,7 +1274,7 @@ void create_screen_main() {
                         }
                         {
                             lv_obj_t *obj = lv_label_create(parent_obj);
-                            objects.obj17 = obj;
+                            objects.obj18 = obj;
                             lv_obj_set_pos(obj, 88, 9);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
                             lv_obj_set_style_text_font(obj, &ui_font_ping_fang70, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -1281,6 +1292,29 @@ void create_screen_main() {
                     lv_obj_set_style_bg_color(obj, lv_color_hex(0xff4e4d4d), LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_outline_width(obj, 1, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    {
+                        lv_obj_t *parent_obj = obj;
+                        {
+                            lv_obj_t *obj = lv_obj_create(parent_obj);
+                            lv_obj_set_pos(obj, -1, 45);
+                            lv_obj_set_size(obj, 37, 7);
+                        }
+                        {
+                            lv_obj_t *obj = lv_obj_create(parent_obj);
+                            lv_obj_set_pos(obj, 47, 45);
+                            lv_obj_set_size(obj, 37, 7);
+                        }
+                        {
+                            lv_obj_t *obj = lv_obj_create(parent_obj);
+                            lv_obj_set_pos(obj, 95, 45);
+                            lv_obj_set_size(obj, 37, 7);
+                        }
+                        {
+                            lv_obj_t *obj = lv_obj_create(parent_obj);
+                            lv_obj_set_pos(obj, 143, 45);
+                            lv_obj_set_size(obj, 37, 7);
+                        }
+                    }
                 }
                 {
                     lv_obj_t *obj = lv_btn_create(parent_obj);
@@ -1431,7 +1465,7 @@ void create_screen_main() {
                 lv_obj_t *parent_obj = obj;
                 {
                     lv_obj_t *obj = lv_label_create(parent_obj);
-                    objects.obj18 = obj;
+                    objects.obj19 = obj;
                     lv_obj_set_pos(obj, 0, 0);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
                     lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -1455,7 +1489,7 @@ void create_screen_main() {
                 lv_obj_t *parent_obj = obj;
                 {
                     lv_obj_t *obj = lv_label_create(parent_obj);
-                    objects.obj19 = obj;
+                    objects.obj20 = obj;
                     lv_obj_set_pos(obj, 301, 394);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
                     lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -1487,23 +1521,13 @@ void create_screen_main() {
         }
         {
             lv_obj_t *obj = lv_label_create(parent_obj);
-            objects.obj20 = obj;
+            objects.obj21 = obj;
             lv_obj_set_pos(obj, 10, 10);
             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
             lv_obj_add_flag(obj, LV_OBJ_FLAG_HIDDEN);
             lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_obj_set_style_text_font(obj, &ui_font_ping_fang22, LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_label_set_text(obj, "室温:    °C");
-        }
-        {
-            // idle_overlay
-            lv_obj_t *obj = lv_obj_create(parent_obj);
-            objects.idle_overlay = obj;
-            lv_obj_set_pos(obj, 0, 0);
-            lv_obj_set_size(obj, 480, 480);
-            lv_obj_add_event_cb(obj, event_handler_cb_main_idle_overlay, LV_EVENT_ALL, flowState);
-            lv_obj_add_flag(obj, LV_OBJ_FLAG_HIDDEN);
-            add_style_popup_window_background(obj);
         }
         {
             // voice_response_popup
@@ -1518,7 +1542,7 @@ void create_screen_main() {
                 lv_obj_t *parent_obj = obj;
                 {
                     lv_obj_t *obj = lv_obj_create(parent_obj);
-                    objects.obj21 = obj;
+                    objects.obj22 = obj;
                     lv_obj_set_pos(obj, 62, 131);
                     lv_obj_set_size(obj, 324, 200);
                     lv_obj_clear_flag(obj, LV_OBJ_FLAG_CLICKABLE|LV_OBJ_FLAG_SCROLLABLE);
@@ -1543,6 +1567,363 @@ void create_screen_main() {
                     }
                 }
             }
+        }
+        {
+            // idle_overlay
+            lv_obj_t *obj = lv_obj_create(parent_obj);
+            objects.idle_overlay = obj;
+            lv_obj_set_pos(obj, 0, 0);
+            lv_obj_set_size(obj, 480, 480);
+            lv_obj_add_event_cb(obj, event_handler_cb_main_idle_overlay, LV_EVENT_ALL, flowState);
+            lv_obj_add_flag(obj, LV_OBJ_FLAG_HIDDEN);
+            lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+            add_style_popup_window_background(obj);
+            lv_obj_set_style_bg_opa(obj, 255, LV_PART_MAIN | LV_STATE_DEFAULT);
+            {
+                lv_obj_t *parent_obj = obj;
+                {
+                    lv_obj_t *obj = lv_obj_create(parent_obj);
+                    lv_obj_set_pos(obj, 164, 2);
+                    lv_obj_set_size(obj, 120, 40);
+                    lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                    lv_obj_set_style_layout(obj, LV_LAYOUT_FLEX, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_flex_main_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_flex_track_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_flex_flow(obj, LV_FLEX_FLOW_ROW, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    {
+                        lv_obj_t *parent_obj = obj;
+                        {
+                            lv_obj_t *obj = lv_label_create(parent_obj);
+                            lv_obj_set_pos(obj, 7, -1);
+                            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                            lv_obj_set_style_text_font(obj, &ui_font_ping_fang22, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_label_set_text(obj, "试试对我说");
+                        }
+                    }
+                }
+                {
+                    // idle_screen_container
+                    lv_obj_t *obj = lv_obj_create(parent_obj);
+                    objects.idle_screen_container = obj;
+                    lv_obj_set_pos(obj, -16, 46);
+                    lv_obj_set_size(obj, 480, 136);
+                    lv_obj_set_style_pad_left(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_pad_top(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_pad_right(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_pad_bottom(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_bg_opa(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_border_width(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_radius(obj, 0, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                    lv_obj_set_style_layout(obj, LV_LAYOUT_FLEX, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_flex_main_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_flex_track_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_flex_flow(obj, LV_FLEX_FLOW_ROW_WRAP, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    {
+                        lv_obj_t *parent_obj = obj;
+                        {
+                            lv_obj_t *obj = lv_obj_create(parent_obj);
+                            lv_obj_set_pos(obj, 42, 62);
+                            lv_obj_set_size(obj, 165, 42);
+                            lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                            add_style_idle_tip(obj);
+                            lv_obj_set_style_layout(obj, LV_LAYOUT_FLEX, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_flow(obj, LV_FLEX_FLOW_ROW, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_main_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_track_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            {
+                                lv_obj_t *parent_obj = obj;
+                                {
+                                    lv_obj_t *obj = lv_label_create(parent_obj);
+                                    objects.obj23 = obj;
+                                    lv_obj_set_pos(obj, 0, 0);
+                                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                                    lv_obj_set_style_text_font(obj, &ui_font_ping_fang18, LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_label_set_text(obj, "你好小助, 打开空调");
+                                }
+                            }
+                        }
+                        {
+                            lv_obj_t *obj = lv_obj_create(parent_obj);
+                            lv_obj_set_pos(obj, 25, 123);
+                            lv_obj_set_size(obj, 200, 42);
+                            lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                            add_style_idle_tip(obj);
+                            lv_obj_set_style_layout(obj, LV_LAYOUT_FLEX, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_flow(obj, LV_FLEX_FLOW_ROW, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_main_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_track_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            {
+                                lv_obj_t *parent_obj = obj;
+                                {
+                                    lv_obj_t *obj = lv_label_create(parent_obj);
+                                    objects.obj24 = obj;
+                                    lv_obj_set_pos(obj, 0, 0);
+                                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                                    lv_obj_set_style_text_font(obj, &ui_font_ping_fang18, LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_label_set_text(obj, "你好小助, 调到二十八度");
+                                }
+                            }
+                        }
+                        {
+                            lv_obj_t *obj = lv_obj_create(parent_obj);
+                            lv_obj_set_pos(obj, 238, 62);
+                            lv_obj_set_size(obj, 204, 42);
+                            lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                            add_style_idle_tip(obj);
+                            {
+                                lv_obj_t *parent_obj = obj;
+                                {
+                                    lv_obj_t *obj = lv_label_create(parent_obj);
+                                    objects.obj25 = obj;
+                                    lv_obj_set_pos(obj, 0, 0);
+                                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                                    lv_obj_set_style_text_font(obj, &ui_font_ping_fang18, LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_label_set_text(obj, "你好小助, 打开睡眠模式");
+                                }
+                            }
+                        }
+                        {
+                            lv_obj_t *obj = lv_obj_create(parent_obj);
+                            lv_obj_set_pos(obj, 258, 123);
+                            lv_obj_set_size(obj, 185, 42);
+                            lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                            add_style_idle_tip(obj);
+                            lv_obj_set_style_layout(obj, LV_LAYOUT_FLEX, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_flow(obj, LV_FLEX_FLOW_ROW, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_main_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_track_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            {
+                                lv_obj_t *parent_obj = obj;
+                                {
+                                    lv_obj_t *obj = lv_label_create(parent_obj);
+                                    objects.obj26 = obj;
+                                    lv_obj_set_pos(obj, 0, 0);
+                                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                                    lv_obj_set_style_text_font(obj, &ui_font_ping_fang18, LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_label_set_text(obj, "你好小助, 打开床头灯");
+                                }
+                            }
+                        }
+                        {
+                            lv_obj_t *obj = lv_obj_create(parent_obj);
+                            lv_obj_set_pos(obj, 258, 123);
+                            lv_obj_set_size(obj, 185, 42);
+                            lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                            add_style_idle_tip(obj);
+                            lv_obj_set_style_layout(obj, LV_LAYOUT_FLEX, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_flow(obj, LV_FLEX_FLOW_ROW, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_main_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_track_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            {
+                                lv_obj_t *parent_obj = obj;
+                                {
+                                    lv_obj_t *obj = lv_label_create(parent_obj);
+                                    objects.obj27 = obj;
+                                    lv_obj_set_pos(obj, 0, 0);
+                                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                                    lv_obj_set_style_text_font(obj, &ui_font_ping_fang18, LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_label_set_text(obj, "你好小助, 调到二十度");
+                                }
+                            }
+                        }
+                        {
+                            lv_obj_t *obj = lv_obj_create(parent_obj);
+                            lv_obj_set_pos(obj, 258, 123);
+                            lv_obj_set_size(obj, 185, 42);
+                            lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                            add_style_idle_tip(obj);
+                            lv_obj_set_style_layout(obj, LV_LAYOUT_FLEX, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_flow(obj, LV_FLEX_FLOW_ROW, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_main_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_track_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            {
+                                lv_obj_t *parent_obj = obj;
+                                {
+                                    lv_obj_t *obj = lv_label_create(parent_obj);
+                                    objects.obj28 = obj;
+                                    lv_obj_set_pos(obj, 0, 0);
+                                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                                    lv_obj_set_style_text_font(obj, &ui_font_ping_fang18, LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_label_set_text(obj, "你好小助, 我要睡觉了");
+                                }
+                            }
+                        }
+                        {
+                            lv_obj_t *obj = lv_obj_create(parent_obj);
+                            lv_obj_set_pos(obj, 258, 123);
+                            lv_obj_set_size(obj, 185, 42);
+                            lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                            add_style_idle_tip(obj);
+                            lv_obj_set_style_layout(obj, LV_LAYOUT_FLEX, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_flow(obj, LV_FLEX_FLOW_ROW, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_main_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_track_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            {
+                                lv_obj_t *parent_obj = obj;
+                                {
+                                    lv_obj_t *obj = lv_label_create(parent_obj);
+                                    objects.obj29 = obj;
+                                    lv_obj_set_pos(obj, 0, 0);
+                                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                                    lv_obj_set_style_text_font(obj, &ui_font_ping_fang18, LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_label_set_text(obj, "你好小助, 我要起床了");
+                                }
+                            }
+                        }
+                        {
+                            lv_obj_t *obj = lv_obj_create(parent_obj);
+                            lv_obj_set_pos(obj, 86, 123);
+                            lv_obj_set_size(obj, 204, 42);
+                            lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                            add_style_idle_tip(obj);
+                            lv_obj_set_style_layout(obj, LV_LAYOUT_FLEX, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_flow(obj, LV_FLEX_FLOW_ROW, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_main_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_track_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            {
+                                lv_obj_t *parent_obj = obj;
+                                {
+                                    lv_obj_t *obj = lv_label_create(parent_obj);
+                                    objects.obj30 = obj;
+                                    lv_obj_set_pos(obj, 0, 0);
+                                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                                    lv_obj_set_style_text_font(obj, &ui_font_ping_fang18, LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_label_set_text(obj, "你好小助, 打开制热模式");
+                                }
+                            }
+                        }
+                        {
+                            lv_obj_t *obj = lv_obj_create(parent_obj);
+                            lv_obj_set_pos(obj, 481, 123);
+                            lv_obj_set_size(obj, 172, 42);
+                            lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                            add_style_idle_tip(obj);
+                            lv_obj_set_style_layout(obj, LV_LAYOUT_FLEX, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_flow(obj, LV_FLEX_FLOW_ROW, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_main_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_track_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            {
+                                lv_obj_t *parent_obj = obj;
+                                {
+                                    lv_obj_t *obj = lv_label_create(parent_obj);
+                                    objects.obj31 = obj;
+                                    lv_obj_set_pos(obj, 0, 0);
+                                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                                    lv_obj_set_style_text_font(obj, &ui_font_ping_fang18, LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_label_set_text(obj, "你好小助, 风速调高");
+                                }
+                            }
+                        }
+                        {
+                            lv_obj_t *obj = lv_obj_create(parent_obj);
+                            lv_obj_set_pos(obj, 1648, 123);
+                            lv_obj_set_size(obj, 152, 42);
+                            lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                            add_style_idle_tip(obj);
+                            lv_obj_set_style_layout(obj, LV_LAYOUT_FLEX, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_flow(obj, LV_FLEX_FLOW_ROW, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_main_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_track_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            {
+                                lv_obj_t *parent_obj = obj;
+                                {
+                                    lv_obj_t *obj = lv_label_create(parent_obj);
+                                    objects.obj32 = obj;
+                                    lv_obj_set_pos(obj, 0, 0);
+                                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                                    lv_obj_set_style_text_font(obj, &ui_font_ping_fang18, LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_label_set_text(obj, "你好小助, 太冷了");
+                                }
+                            }
+                        }
+                        {
+                            lv_obj_t *obj = lv_obj_create(parent_obj);
+                            lv_obj_set_pos(obj, 75, 123);
+                            lv_obj_set_size(obj, 168, 42);
+                            lv_obj_clear_flag(obj, LV_OBJ_FLAG_SCROLLABLE);
+                            add_style_idle_tip(obj);
+                            lv_obj_set_style_layout(obj, LV_LAYOUT_FLEX, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_flow(obj, LV_FLEX_FLOW_ROW, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_main_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_flex_track_place(obj, LV_FLEX_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            {
+                                lv_obj_t *parent_obj = obj;
+                                {
+                                    lv_obj_t *obj = lv_label_create(parent_obj);
+                                    objects.obj33 = obj;
+                                    lv_obj_set_pos(obj, 0, 0);
+                                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                                    lv_obj_set_style_text_font(obj, &ui_font_ping_fang18, LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+                                    lv_label_set_text(obj, "你好小助, 关闭窗帘");
+                                }
+                            }
+                        }
+                    }
+                }
+                {
+                    lv_obj_t *obj = lv_btn_create(parent_obj);
+                    objects.obj7 = obj;
+                    lv_obj_set_pos(obj, 157, 356);
+                    lv_obj_set_size(obj, 135, 50);
+                    lv_obj_add_event_cb(obj, event_handler_cb_main_obj7, LV_EVENT_ALL, flowState);
+                    lv_obj_set_style_radius(obj, 50, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    {
+                        lv_obj_t *parent_obj = obj;
+                        {
+                            lv_obj_t *obj = lv_label_create(parent_obj);
+                            lv_obj_set_pos(obj, 0, 0);
+                            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                            lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_obj_set_style_text_font(obj, &ui_font_ping_fang32, LV_PART_MAIN | LV_STATE_DEFAULT);
+                            lv_label_set_text(obj, "熄屏");
+                        }
+                    }
+                }
+                {
+                    // idle_screen_time_label
+                    lv_obj_t *obj = lv_label_create(parent_obj);
+                    objects.idle_screen_time_label = obj;
+                    lv_obj_set_pos(obj, 120, 182);
+                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                    lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_text_font(obj, &ui_font_ping_fang78, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_label_set_text(obj, "");
+                }
+                {
+                    // idle_screen_time_decora
+                    lv_obj_t *obj = lv_label_create(parent_obj);
+                    objects.idle_screen_time_decora = obj;
+                    lv_obj_set_pos(obj, 216, 175);
+                    lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+                    lv_obj_add_flag(obj, LV_OBJ_FLAG_HIDDEN);
+                    lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_obj_set_style_text_font(obj, &ui_font_ping_fang78, LV_PART_MAIN | LV_STATE_DEFAULT);
+                    lv_label_set_text(obj, ":");
+                }
+            }
+        }
+        {
+            // main_screen_time_decora
+            lv_obj_t *obj = lv_label_create(parent_obj);
+            objects.main_screen_time_decora = obj;
+            lv_obj_set_pos(obj, 440, 8);
+            lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+            lv_obj_add_flag(obj, LV_OBJ_FLAG_HIDDEN);
+            lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_obj_set_style_text_font(obj, &ui_font_ping_fang22, LV_PART_MAIN | LV_STATE_DEFAULT);
+            lv_label_set_text(obj, ":");
         }
     }
     
@@ -1681,7 +2062,7 @@ void create_screen_config() {
                 lv_obj_t *parent_obj = obj;
                 {
                     lv_obj_t *obj = lv_label_create(parent_obj);
-                    objects.obj22 = obj;
+                    objects.obj34 = obj;
                     lv_obj_set_pos(obj, 155, 28);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
                     lv_obj_set_style_text_font(obj, &ui_font_ping_fang22, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -1690,17 +2071,17 @@ void create_screen_config() {
                 }
                 {
                     lv_obj_t *obj = lv_btn_create(parent_obj);
-                    objects.obj7 = obj;
+                    objects.obj8 = obj;
                     lv_obj_set_pos(obj, 255, 59);
                     lv_obj_set_size(obj, 70, 70);
-                    lv_obj_add_event_cb(obj, event_handler_cb_config_obj7, LV_EVENT_ALL, flowState);
+                    lv_obj_add_event_cb(obj, event_handler_cb_config_obj8, LV_EVENT_ALL, flowState);
                     add_style_round_button(obj);
                     lv_obj_set_style_radius(obj, 40, LV_PART_MAIN | LV_STATE_DEFAULT);
                     {
                         lv_obj_t *parent_obj = obj;
                         {
                             lv_obj_t *obj = lv_label_create(parent_obj);
-                            objects.obj25 = obj;
+                            objects.obj37 = obj;
                             lv_obj_set_pos(obj, -109, 5);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
                             lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -1730,17 +2111,17 @@ void create_screen_config() {
                 }
                 {
                     lv_obj_t *obj = lv_btn_create(parent_obj);
-                    objects.obj8 = obj;
+                    objects.obj9 = obj;
                     lv_obj_set_pos(obj, 49, 59);
                     lv_obj_set_size(obj, 70, 70);
-                    lv_obj_add_event_cb(obj, event_handler_cb_config_obj8, LV_EVENT_ALL, flowState);
+                    lv_obj_add_event_cb(obj, event_handler_cb_config_obj9, LV_EVENT_ALL, flowState);
                     add_style_round_button(obj);
                     lv_obj_set_style_radius(obj, 40, LV_PART_MAIN | LV_STATE_DEFAULT);
                     {
                         lv_obj_t *parent_obj = obj;
                         {
                             lv_obj_t *obj = lv_label_create(parent_obj);
-                            objects.obj26 = obj;
+                            objects.obj38 = obj;
                             lv_obj_set_pos(obj, 0, -18);
                             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
                             lv_obj_set_style_align(obj, LV_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -1769,7 +2150,7 @@ void create_screen_config() {
                 lv_obj_t *parent_obj = obj;
                 {
                     lv_obj_t *obj = lv_label_create(parent_obj);
-                    objects.obj23 = obj;
+                    objects.obj35 = obj;
                     lv_obj_set_pos(obj, 27, 8);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
                     lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -1778,7 +2159,7 @@ void create_screen_config() {
                 }
                 {
                     lv_obj_t *obj = lv_label_create(parent_obj);
-                    objects.obj24 = obj;
+                    objects.obj36 = obj;
                     lv_obj_set_pos(obj, 164, 8);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
                     lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -1787,10 +2168,10 @@ void create_screen_config() {
                 }
                 {
                     lv_obj_t *obj = lv_label_create(parent_obj);
-                    objects.obj9 = obj;
+                    objects.obj10 = obj;
                     lv_obj_set_pos(obj, 286, 8);
                     lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
-                    lv_obj_add_event_cb(obj, event_handler_cb_config_obj9, LV_EVENT_ALL, flowState);
+                    lv_obj_add_event_cb(obj, event_handler_cb_config_obj10, LV_EVENT_ALL, flowState);
                     lv_obj_add_flag(obj, LV_OBJ_FLAG_CLICKABLE);
                     lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_text_font(obj, &ui_font_ping_fang22, LV_PART_MAIN | LV_STATE_DEFAULT);
@@ -1831,10 +2212,10 @@ void create_screen_config() {
                 lv_obj_t *parent_obj = obj;
                 {
                     lv_obj_t *obj = lv_btn_create(parent_obj);
-                    objects.obj10 = obj;
+                    objects.obj11 = obj;
                     lv_obj_set_pos(obj, 1987, 36);
                     lv_obj_set_size(obj, 131, 80);
-                    lv_obj_add_event_cb(obj, event_handler_cb_config_obj10, LV_EVENT_ALL, flowState);
+                    lv_obj_add_event_cb(obj, event_handler_cb_config_obj11, LV_EVENT_ALL, flowState);
                     add_style_round_button(obj);
                     lv_obj_set_style_radius(obj, 100, LV_PART_MAIN | LV_STATE_DEFAULT);
                     lv_obj_set_style_radius(obj, 100, LV_PART_MAIN | LV_STATE_CHECKED);
@@ -1864,10 +2245,10 @@ void create_screen_config() {
                 }
                 {
                     lv_obj_t *obj = lv_btn_create(parent_obj);
-                    objects.obj11 = obj;
+                    objects.obj12 = obj;
                     lv_obj_set_pos(obj, 174, 36);
                     lv_obj_set_size(obj, 80, 80);
-                    lv_obj_add_event_cb(obj, event_handler_cb_config_obj11, LV_EVENT_ALL, flowState);
+                    lv_obj_add_event_cb(obj, event_handler_cb_config_obj12, LV_EVENT_ALL, flowState);
                     add_style_round_button(obj);
                     lv_obj_set_style_radius(obj, 100, LV_PART_MAIN | LV_STATE_DEFAULT);
                     {
@@ -1884,10 +2265,10 @@ void create_screen_config() {
                 }
                 {
                     lv_obj_t *obj = lv_btn_create(parent_obj);
-                    objects.obj12 = obj;
+                    objects.obj13 = obj;
                     lv_obj_set_pos(obj, 271, 36);
                     lv_obj_set_size(obj, 80, 80);
-                    lv_obj_add_event_cb(obj, event_handler_cb_config_obj12, LV_EVENT_ALL, flowState);
+                    lv_obj_add_event_cb(obj, event_handler_cb_config_obj13, LV_EVENT_ALL, flowState);
                     add_style_round_button(obj);
                     lv_obj_set_style_radius(obj, 100, LV_PART_MAIN | LV_STATE_DEFAULT);
                     {
@@ -1906,10 +2287,10 @@ void create_screen_config() {
         }
         {
             lv_obj_t *obj = lv_btn_create(parent_obj);
-            objects.obj13 = obj;
+            objects.obj14 = obj;
             lv_obj_set_pos(obj, 0, 0);
             lv_obj_set_size(obj, 110, 57);
-            lv_obj_add_event_cb(obj, event_handler_cb_config_obj13, LV_EVENT_ALL, flowState);
+            lv_obj_add_event_cb(obj, event_handler_cb_config_obj14, LV_EVENT_ALL, flowState);
             add_style_config_tab(obj);
             {
                 lv_obj_t *parent_obj = obj;
@@ -1976,7 +2357,7 @@ void create_screen_config() {
             lv_obj_set_size(obj, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
             lv_obj_set_style_text_color(obj, lv_color_hex(0xffffffff), LV_PART_MAIN | LV_STATE_DEFAULT);
             lv_obj_set_style_text_font(obj, &ui_font_ping_fang14, LV_PART_MAIN | LV_STATE_DEFAULT);
-            lv_label_set_text(obj, "v1.0.0-Initiatio");
+            lv_label_set_text(obj, "v1.2.0-Initiatio");
         }
     }
     
@@ -1988,19 +2369,19 @@ void tick_screen_config() {
     (void)flowState;
     {
         const char *new_val = evalTextProperty(flowState, 13, 3, "Failed to evaluate Text in Label widget");
-        const char *cur_val = lv_label_get_text(objects.obj25);
+        const char *cur_val = lv_label_get_text(objects.obj37);
         if (strcmp(new_val, cur_val) != 0) {
-            tick_value_change_obj = objects.obj25;
-            lv_label_set_text(objects.obj25, new_val);
+            tick_value_change_obj = objects.obj37;
+            lv_label_set_text(objects.obj37, new_val);
             tick_value_change_obj = NULL;
         }
     }
     {
         const char *new_val = evalTextProperty(flowState, 17, 3, "Failed to evaluate Text in Label widget");
-        const char *cur_val = lv_label_get_text(objects.obj26);
+        const char *cur_val = lv_label_get_text(objects.obj38);
         if (strcmp(new_val, cur_val) != 0) {
-            tick_value_change_obj = objects.obj26;
-            lv_label_set_text(objects.obj26, new_val);
+            tick_value_change_obj = objects.obj38;
+            lv_label_set_text(objects.obj38, new_val);
             tick_value_change_obj = NULL;
         }
     }
@@ -2021,10 +2402,10 @@ void create_screen_lamp_control() {
         lv_obj_t *parent_obj = obj;
         {
             lv_obj_t *obj = lv_btn_create(parent_obj);
-            objects.obj14 = obj;
+            objects.obj15 = obj;
             lv_obj_set_pos(obj, 0, 0);
             lv_obj_set_size(obj, 110, 57);
-            lv_obj_add_event_cb(obj, event_handler_cb_lamp_control_obj14, LV_EVENT_ALL, flowState);
+            lv_obj_add_event_cb(obj, event_handler_cb_lamp_control_obj15, LV_EVENT_ALL, flowState);
             add_style_config_tab(obj);
             {
                 lv_obj_t *parent_obj = obj;
@@ -2288,10 +2669,10 @@ void create_screen_curtain_control() {
         lv_obj_t *parent_obj = obj;
         {
             lv_obj_t *obj = lv_btn_create(parent_obj);
-            objects.obj15 = obj;
+            objects.obj16 = obj;
             lv_obj_set_pos(obj, 0, 1);
             lv_obj_set_size(obj, 110, 57);
-            lv_obj_add_event_cb(obj, event_handler_cb_curtain_control_obj15, LV_EVENT_ALL, flowState);
+            lv_obj_add_event_cb(obj, event_handler_cb_curtain_control_obj16, LV_EVENT_ALL, flowState);
             add_style_config_tab(obj);
             {
                 lv_obj_t *parent_obj = obj;
@@ -3318,8 +3699,8 @@ extern void add_style(lv_obj_t *obj, int32_t styleIndex);
 extern void remove_style(lv_obj_t *obj, int32_t styleIndex);
 
 static const char *screen_names[] = { "Main", "config", "lamp_control", "curtain_control" };
-static const char *object_names[] = { "main", "config", "lamp_control", "curtain_control", "mode_name_selector", "mode_name_selector__obj27", "mode_name_selector__obj28", "mode_name_selector__obj29", "mode_name_selector__obj30", "mode_name_selector__obj31", "mode_name_selector__obj32", "mode_name_selector__obj33", "mode_name_selector__obj34", "mode_name_selector__obj35", "mode_name_selector__obj36", "mode_name_selector__obj37", "mode_name_selector__selector_2", "curtain_name_selector", "curtain_name_selector__obj17", "curtain_name_selector__obj18", "curtain_name_selector__obj19", "curtain_name_selector__obj20", "curtain_name_selector__obj21", "curtain_name_selector__obj22", "curtain_name_selector__obj23", "curtain_name_selector__obj24", "curtain_name_selector__obj25", "curtain_name_selector__obj26", "lamp_name_selector", "lamp_name_selector__obj3", "lamp_name_selector__obj4", "lamp_name_selector__obj5", "lamp_name_selector__obj6", "lamp_name_selector__obj7", "lamp_name_selector__obj8", "lamp_name_selector__obj9", "lamp_name_selector__obj10", "lamp_name_selector__obj11", "lamp_name_selector__obj12", "lamp_name_selector__obj13", "lamp_name_selector__obj14", "lamp_name_selector__obj15", "lamp_name_selector__obj16", "mode1", "mode2", "mode3", "mode4", "mode5", "mode6", "target_temp", "obj0", "obj1", "obj2", "obj3", "obj4", "obj5", "obj6", "idle_overlay", "voice_response_popup", "config_air_btn", "config_lamp_btn", "config_curtain_btn", "config_mode_btn", "obj7", "obj8", "obj9", "page_number", "obj10", "obj11", "obj12", "obj13", "obj14", "lamp1", "lamp2", "lamp3", "lamp4", "lamp5", "lamp6", "lamp7", "lamp8", "lamp9", "lamp10", "lamp11", "lamp12", "obj15", "curtain1", "curtain2", "curtain3", "curtain4", "curtain5", "curtain6", "modes_container", "air_panel", "obj16", "air_mode", "air_fan_speed", "obj17", "air_off_overlay", "falt1", "flat2", "hell_2", "obj18", "obj19", "room_temp", "now_time", "obj20", "obj21", "voice_response_label", "obj_container", "page_air", "obj22", "air_id", "config_table_header", "obj23", "obj24", "config_table_footer", "version", "obj25", "obj26" };
-static const char *style_names[] = { "Center Icon", "Round Button", "Normal Button", "control_item_mode", "Normal Panel", "test", "config_tab", "lamp_name_item", "control_item_lamp", "control_btn", "delete_device", "popup window background" };
+static const char *object_names[] = { "main", "config", "lamp_control", "curtain_control", "mode_name_selector", "mode_name_selector__obj27", "mode_name_selector__obj28", "mode_name_selector__obj29", "mode_name_selector__obj30", "mode_name_selector__obj31", "mode_name_selector__obj32", "mode_name_selector__obj33", "mode_name_selector__obj34", "mode_name_selector__obj35", "mode_name_selector__obj36", "mode_name_selector__obj37", "mode_name_selector__selector_2", "curtain_name_selector", "curtain_name_selector__obj17", "curtain_name_selector__obj18", "curtain_name_selector__obj19", "curtain_name_selector__obj20", "curtain_name_selector__obj21", "curtain_name_selector__obj22", "curtain_name_selector__obj23", "curtain_name_selector__obj24", "curtain_name_selector__obj25", "curtain_name_selector__obj26", "lamp_name_selector", "lamp_name_selector__obj3", "lamp_name_selector__obj4", "lamp_name_selector__obj5", "lamp_name_selector__obj6", "lamp_name_selector__obj7", "lamp_name_selector__obj8", "lamp_name_selector__obj9", "lamp_name_selector__obj10", "lamp_name_selector__obj11", "lamp_name_selector__obj12", "lamp_name_selector__obj13", "lamp_name_selector__obj14", "lamp_name_selector__obj15", "lamp_name_selector__obj16", "mode1", "mode2", "mode3", "mode4", "mode5", "mode6", "target_temp", "obj0", "obj1", "obj2", "obj3", "obj4", "obj5", "obj6", "voice_response_popup", "idle_overlay", "obj7", "config_air_btn", "config_lamp_btn", "config_curtain_btn", "config_mode_btn", "obj8", "obj9", "obj10", "page_number", "obj11", "obj12", "obj13", "obj14", "obj15", "lamp1", "lamp2", "lamp3", "lamp4", "lamp5", "lamp6", "lamp7", "lamp8", "lamp9", "lamp10", "lamp11", "lamp12", "obj16", "curtain1", "curtain2", "curtain3", "curtain4", "curtain5", "curtain6", "modes_container", "air_panel", "obj17", "air_mode", "air_fan_speed", "obj18", "air_off_overlay", "falt1", "flat2", "hell_2", "obj19", "obj20", "room_temp", "now_time", "obj21", "obj22", "voice_response_label", "idle_screen_container", "obj23", "obj24", "obj25", "obj26", "obj27", "obj28", "obj29", "obj30", "obj31", "obj32", "obj33", "idle_screen_time_label", "idle_screen_time_decora", "main_screen_time_decora", "obj_container", "page_air", "obj34", "air_id", "config_table_header", "obj35", "obj36", "config_table_footer", "version", "obj37", "obj38" };
+static const char *style_names[] = { "Center Icon", "Round Button", "Normal Button", "control_item_mode", "Normal Panel", "idle_tip", "test", "config_tab", "lamp_name_item", "control_item_lamp", "control_btn", "delete_device", "popup window background" };
 
 
 typedef void (*tick_screen_func_t)();

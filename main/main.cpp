@@ -8,6 +8,7 @@
 #include "air.h"
 #include "wifi.h"
 #include "idle_manager.h"
+#include "backlight.h"
 
 #define TAG "main.cpp"
 
@@ -38,6 +39,7 @@ extern "C" void app_main(void) {
     xTaskCreatePinnedToCore(lvgl_task, "lvgl_task", 4096 * 2, nullptr, 10, nullptr, 1);
     xTaskCreate(monitor_task, "monitor_task", 3072, nullptr, 1, nullptr);
     rs485_init();
+    init_backlight();
     init_air_commit_timer();    // 空调防抖定时器
 
     // esp_netif_init();

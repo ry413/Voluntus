@@ -202,6 +202,40 @@ void remove_style_normal_panel(lv_obj_t *obj) {
 };
 
 //
+// Style: idle_tip
+//
+
+void init_style_idle_tip_MAIN_DEFAULT(lv_style_t *style) {
+    init_style_normal_panel_MAIN_DEFAULT(style);
+    
+    lv_style_set_layout(style, LV_LAYOUT_FLEX);
+    lv_style_set_flex_flow(style, LV_FLEX_FLOW_ROW);
+    lv_style_set_flex_main_place(style, LV_FLEX_ALIGN_CENTER);
+    lv_style_set_flex_track_place(style, LV_FLEX_ALIGN_CENTER);
+    lv_style_set_border_width(style, 0);
+};
+
+lv_style_t *get_style_idle_tip_MAIN_DEFAULT() {
+    static lv_style_t *style;
+    if (!style) {
+        style = lv_mem_alloc(sizeof(lv_style_t));
+        lv_style_init(style);
+        init_style_idle_tip_MAIN_DEFAULT(style);
+    }
+    return style;
+};
+
+void add_style_idle_tip(lv_obj_t *obj) {
+    (void)obj;
+    lv_obj_add_style(obj, get_style_idle_tip_MAIN_DEFAULT(), LV_PART_MAIN | LV_STATE_DEFAULT);
+};
+
+void remove_style_idle_tip(lv_obj_t *obj) {
+    (void)obj;
+    lv_obj_remove_style(obj, get_style_idle_tip_MAIN_DEFAULT(), LV_PART_MAIN | LV_STATE_DEFAULT);
+};
+
+//
 // Style: test
 //
 
@@ -455,6 +489,7 @@ void add_style(lv_obj_t *obj, int32_t styleIndex) {
         add_style_normal_button,
         add_style_control_item_mode,
         add_style_normal_panel,
+        add_style_idle_tip,
         add_style_test,
         add_style_config_tab,
         add_style_lamp_name_item,
@@ -474,6 +509,7 @@ void remove_style(lv_obj_t *obj, int32_t styleIndex) {
         remove_style_normal_button,
         remove_style_control_item_mode,
         remove_style_normal_panel,
+        remove_style_idle_tip,
         remove_style_test,
         remove_style_config_tab,
         remove_style_lamp_name_item,

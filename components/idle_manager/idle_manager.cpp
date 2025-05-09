@@ -3,11 +3,12 @@
 #include "lvgl.h"
 #include "screens.h"
 #include "utils.h"
+#include "backlight.h"
 
 #define TAG "IDLE_MANAGER"
 
 static lv_timer_t *idle_timer = nullptr;    // 一次性无操作定时器
-// static lv_timer_t *fadeout_timer = nullptr; // 熄屏逻辑中使用的, 用于管理渐隐遮罩层
+void show_random_4_tip(lv_obj_t *container);
 
 // 无操作定时器回调
 static void on_idle_timeout(lv_timer_t * t) {
@@ -21,10 +22,11 @@ static void on_idle_timeout(lv_timer_t * t) {
             lv_scr_load(objects.main);
             reset_idle_monitor();
         }
-        // 主界面则熄屏
+        // 主界面则进入待机界面
         else {
-            ESP_LOGI(TAG, "无操作, 熄屏");
+            ESP_LOGI(TAG, "无操作, 进入待机界面");
             lv_obj_clear_flag(objects.idle_overlay, LV_OBJ_FLAG_HIDDEN);
+            show_random_4_tip(objects.idle_screen_container);
         }
     }, NULL);
 }
@@ -46,9 +48,35 @@ void reset_idle_monitor() {
     }
 }
 
-// void del_fadeout_timer() {
-//     if (fadeout_timer) {
-//         lv_timer_del(fadeout_timer);
-//         fadeout_timer = nullptr;
-//     }
-// }
+// 用于在待机界面随机显示四个提示
+void show_random_4_tip(lv_obj_t *container) {
+    uint32_t child_count = lv_obj_get_child_cnt(container);
+    if (child_count <= 4) {
+        ESP_LOGE(TAG, "这个怎么样也不可能");
+        return;
+    }
+
+    // 创建索引数组
+    uint32_t indices[child_count];
+    for (uint32_t i = 0; i < child_count; i++) {
+        indices[i] = i;
+    }
+
+    // 洗牌算法：Fisher–Yates shuffle
+    for (uint32_t i = child_count - 1; i > 0; i--) {
+        uint32_t j = rand() % (i + 1);
+        uint32_t tmp = indices[i];
+        indices[i] = indices[j];
+        indices[j] = tmp;
+    }
+
+    // 显示前4个，隐藏其余
+    for (uint32_t i = 0; i < child_count; i++) {
+        lv_obj_t *child = lv_obj_get_child(container, indices[i]);
+        if (i < 4) {
+            lv_obj_clear_flag(child, LV_OBJ_FLAG_HIDDEN);
+        } else {
+            lv_obj_add_flag(child, LV_OBJ_FLAG_HIDDEN);
+        }
+    }
+}

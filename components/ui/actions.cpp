@@ -267,7 +267,7 @@ static void initialization() {
     lv_label_set_text(objects.version, VOLUNTUS_VERSION);
     load_configs();             // 加载nvs配置
     sync_configs_to_btns();     // 应用配置
-    init_idle_monitor(10000); // 启动待机定时器
+    init_idle_monitor(30000);   // 启动待机定时器
 
     ESP_LOGI(TAG, "UI之后的初始化完成");
     initialized = true;
@@ -282,12 +282,4 @@ extern "C" void action_restart(lv_event_t *e) {
 
 extern "C" void action_close_voice_response_popup(lv_event_t *e) {
     lv_obj_add_flag(objects.voice_response_popup, LV_OBJ_FLAG_HIDDEN);
-}
-
-// 点击暗屏遮罩层, 取消熄屏
-extern "C" void action_click_wakeup(lv_event_t *e) {
-    lv_obj_add_flag(objects.idle_overlay, LV_OBJ_FLAG_HIDDEN);
-    // del_fadeout_timer();
-
-    // turn_on_backlight();
 }

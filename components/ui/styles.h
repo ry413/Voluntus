@@ -33,6 +33,11 @@ lv_style_t *get_style_normal_panel_MAIN_DEFAULT();
 void add_style_normal_panel(lv_obj_t *obj);
 void remove_style_normal_panel(lv_obj_t *obj);
 
+// Style: idle_tip
+lv_style_t *get_style_idle_tip_MAIN_DEFAULT();
+void add_style_idle_tip(lv_obj_t *obj);
+void remove_style_idle_tip(lv_obj_t *obj);
+
 // Style: test
 lv_style_t *get_style_test_MAIN_DEFAULT();
 void add_style_test(lv_obj_t *obj);

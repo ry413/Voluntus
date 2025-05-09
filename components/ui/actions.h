@@ -34,6 +34,7 @@ extern void action_clean_all_configs(lv_event_t * e);
 extern void action_restart(lv_event_t * e);
 extern void action_close_voice_response_popup(lv_event_t * e);
 extern void action_click_wakeup(lv_event_t * e);
+extern void action_turn_off_backlight(lv_event_t * e);
 
 
 #ifdef __cplusplus

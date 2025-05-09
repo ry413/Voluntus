@@ -27,7 +27,7 @@ private:
 
     bool buttons_press[BUTTON_COUNT] = {false};     // true表示按钮按下, false为释放
     bool buttons_light[BUTTON_COUNT] = {false};     // true表示当前按钮指示灯亮, false为灭
-    std::vector<uint8_t> state_queue;               // 此面板储存的待上班按键状态
+    std::vector<uint8_t> state_queue;               // 此面板储存的待上报按键状态
     
 };
 
